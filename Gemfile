@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'brakeman', require: false
 gem 'coffee-rails', '~> 4.1.0'
 gem 'devise'
+gem 'faker'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'pg', '~> 0.15'
