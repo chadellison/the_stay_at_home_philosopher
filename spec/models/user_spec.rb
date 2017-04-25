@@ -10,6 +10,10 @@ RSpec.describe User, type: :model do
     expect(User.new).to respond_to(:posts)
   end
 
+  it 'has many comments' do
+    expect(User.new).to respond_to(:comments)
+  end
+
   it 'validates the presence of first_name' do
     user = User.new(last_name: last_name, email: email, password: password)
     expect(user.valid?).to be false

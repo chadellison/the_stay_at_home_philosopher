@@ -5,6 +5,10 @@ RSpec.describe Post, type: :model do
     expect(Post.new).to respond_to(:user)
   end
 
+  it 'has many comments' do
+    expect(Post.new).to respond_to(:comments)
+  end
+
   it 'validates the presence of a user_id' do
     title = Faker::Name.name
     body = Faker::Lorem.paragraph
