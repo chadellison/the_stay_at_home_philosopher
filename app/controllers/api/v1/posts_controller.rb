@@ -1,7 +1,6 @@
 module Api
   module V1
-    class PostsController < ApplicationController
-      before_action :authenticate_user!, only: [:create]
+    class PostsController < BaseController
       respond_to :json
 
       def index

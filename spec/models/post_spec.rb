@@ -82,12 +82,21 @@ RSpec.describe Post, type: :model do
       end
 
       context 'when no page number is passed in' do
+        xit 'test' do
+        end
       end
 
       context 'when a page number is passed in' do
         it 'paginates the results' do
           expect(Post.paginate('2').pluck(:title).first).to eq '11th post'
           expect(Post.paginate('2').pluck(:title).last).to eq '20th post'
+        end
+      end
+    end
+
+    context 'class methods' do
+      describe 'include_users' do
+        xit 'test' do
         end
       end
     end
