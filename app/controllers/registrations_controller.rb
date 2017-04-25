@@ -1,6 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
   def create
     user = User.new(sign_up_params)
+
     if user.save
       flash[:notice] = 'Welcome! You have signed up successfully. Login to get started.'
       redirect_to root_path
@@ -14,6 +15,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def sign_up_params
     params.require(:user).permit(:first_name, :last_name, :email, :password,
-                                 :password_confirmation)
+                                 :password_confirmation, :about_me)
   end
 end
