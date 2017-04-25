@@ -30,7 +30,7 @@ RSpec.feature 'user can register' do
       click_button 'Sign up'
 
       expect(current_path).to eq new_user_registration_path
-      # expect(page).to have_content 'Welcome! You have signed up successfully. Login to get started.'
+      expect(page).to have_content "first_name can't be blank"
     end
   end
 end

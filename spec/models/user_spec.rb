@@ -30,6 +30,20 @@ RSpec.describe User, type: :model do
     expect(user.errors[:email]).to eq ["can't be blank"]
   end
 
+  it 'validates the uniqueness of email' do
+    User.create(first_name: first_name,
+                last_name: last_name,
+                email:      email,
+                password: password)
+
+    user = User.new(first_name: first_name,
+                    last_name: last_name,
+                    email:      email,
+                    password: password)
+    expect(user.valid?).to be false
+    expect(user.errors[:email]).to eq ['has already been taken']
+  end
+
   it 'validates the presence of password' do
     user = User.new(first_name: first_name,
                     last_name: last_name,
