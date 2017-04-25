@@ -1,6 +1,0 @@
-<h2 class="title">The Stay at Home Philosopher</h2>
-<h2 class="posts">Posts</h2>
-<% @posts.each do |post| %>
-  <div class="post">Title: <%= post.title %></div>
-  <div class="post">Author: <%= post.user.full_name %></div>
-<% end if @posts.present? %>

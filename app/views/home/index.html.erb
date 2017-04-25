@@ -1,0 +1,20 @@
+<h2 class="title">The Stay at Home Philosopher</h2>
+<h2 class="posts">Posts</h2>
+
+<% if current_user.present? %>
+  <button type="button" name="button" class="add-post">Add Post</button>
+<% end %>
+
+<div class="add-post-form hidden">
+  <h2>Add Post</h2>
+  <label for="">Title</label>
+  <input type="text" name="" value="" class="title-input">
+  <label for="">Post</label>
+  <input type="text" name="" value="" class="body-input">
+  <button type="button" name="button" class="submit-post">Submit</button>
+  <button type="button" name="button" class="cancel-submission">Cancel</button>
+</div>
+
+<div id="posts">
+
+</div>
