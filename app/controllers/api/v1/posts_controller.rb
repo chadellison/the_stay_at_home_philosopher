@@ -4,8 +4,11 @@ module Api
       respond_to :json
 
       def index
-        posts = Post.post_order.paginate(params[:page])
-        respond_with posts
+        respond_with Post.include_users(Post.post_order.paginate(params[:page]))
+      end
+
+      def create
+
       end
     end
   end

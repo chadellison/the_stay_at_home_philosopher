@@ -5,4 +5,15 @@ class Post < ActiveRecord::Base
 
   scope :post_order, (-> { order(updated_at: :desc).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
+
+  def self.include_users(posts)
+    posts.includes(:user).map do |post|
+      {
+        type: 'post',
+        id: post.id,
+        attributes: { title: post.title, body: post.body },
+        relationships: { author: post.user.full_name }
+      }
+    end
+  end
 end

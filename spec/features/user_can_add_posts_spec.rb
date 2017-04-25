@@ -12,7 +12,6 @@ RSpec.feature 'user can add posts' do
 
       visit root_path
       expect(page).to have_button('Add Post')
-
     end
   end
 
