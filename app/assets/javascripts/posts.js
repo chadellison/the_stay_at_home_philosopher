@@ -52,15 +52,16 @@ $(document).ready(function() {
   }
 
   function renderPosts(posts) {
-    $.each(posts, function(index, post) {
+    $.each(posts['data'], function(index, post) {
       let title = post.attributes.title
-      let body = post.attributes.body
+      let body = post.attributes.body.substring(0, 20)
       let author = post.relationships.author
+      let postLink = '/posts/' + post.id
 
       $('#posts').append(
         "<br>" +
-        "<div class='post'>" + "Title: " + title + "</div>" +
-        "<div class='post'>" + "Body: " + body + "</div>" +
+        "<div class='post'>" + "Title: " + "<a href='" + postLink + "'>" + title + "</a>" + "</div>" +
+        "<div class='post'>" + "Body: " + "<a href='" + postLink + "'>" + body + "</a>" + "</div>" +
         "<div class='post'>" + "Auther: " + author + "</div>" +
         "<br>"
       )

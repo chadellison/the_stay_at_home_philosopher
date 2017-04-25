@@ -6,6 +6,23 @@ describe Api::V1::PostsController do
       get :index, format: :json
       expect(response.status).to eq 200
     end
+
+    it 'returns all of the posts with their authors' do
+      user = User.create(first_name: Faker::Name.first_name,
+                         last_name: Faker::Name.last_name,
+                         email: Faker::Internet.email,
+                         password: Faker::Internet.password)
+      3.times do |n|
+        user.posts.create(title: "title#{n}", body: "body#{n}")
+      end
+
+      get :index, format: :json
+      parsed_response = JSON.parse(response.body)['data']
+      expect(parsed_response.count).to eq 3
+      expect(parsed_response.first['attributes']['title']).to eq 'title2'
+      expect(parsed_response.last['attributes']['body']).to eq 'body0'
+      expect(parsed_response.last['relationships']['author']).to eq user.full_name
+    end
   end
 
   describe 'create' do
