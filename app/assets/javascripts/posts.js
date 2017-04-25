@@ -6,23 +6,39 @@ $(document).ready(function() {
       renderPosts(posts)
     },
     error: function(errors) {
-      alert(JSON.parse(errors.responseText)["errors"]);
+      alert(JSON.parse(errors.responseText)["errors"])
     }
   })
 
+  $('.add-post').on('click', function() {
+    $('.add-post-form').fadeIn()
+  })
+
+  $('.cancel-submission').on('click', function() {
+    $('.add-post-form').fadeOut()
+  })
+
   $('.submit-post').on('click', function() {
+    let title = $('.title-input').val()
+    let body = $('.body-input').val()
+
     $.ajax({
       type: "POST",
       url: "/api/v1/posts.json",
-      body: JSON.stringify({
+      data: {
         post: {
-          // title: params.name,
-          // author: params.type,
-          // token: params.abv,
-          // body: params.brand
-        },
-        token: params.token
-      })
+          title: title,
+          body: body
+        }
+      },
+      success: function(post) {
+        $('.add-post-form').fadeOut()
+        // prepend post
+      },
+      error: function(errors) {
+        let errorMessage = JSON.parse(errors.responseText).errors
+        alert(errorMessage)
+      }
     })
   })
 
