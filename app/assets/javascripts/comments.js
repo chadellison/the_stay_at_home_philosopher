@@ -47,7 +47,7 @@ $(document).ready(function() {
   }
 
   function renderComments(comments) {
-    $.each(comments, function(index, comment) {
+    $.each(comments['data'], function(index, comment) {
       let body = comment.attributes.body
       let author = comment.relationships.author
 

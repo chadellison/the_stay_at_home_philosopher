@@ -17,7 +17,7 @@ describe Api::V1::PostsController do
       end
 
       get :index, format: :json
-      parsed_response = JSON.parse(response.body)
+      parsed_response = JSON.parse(response.body)['data']
       expect(parsed_response.count).to eq 3
       expect(parsed_response.first['attributes']['title']).to eq 'title2'
       expect(parsed_response.last['attributes']['body']).to eq 'body0'

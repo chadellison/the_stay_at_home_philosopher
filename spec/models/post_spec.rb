@@ -63,30 +63,40 @@ RSpec.describe Post, type: :model do
     end
 
     describe 'paginate' do
-      before do
-        20.times do |n|
-          if n == 10
-            Post.create(title: '11th post',
-                        body: "body number #{n}",
-                        user_id: Faker::Number.number(8))
-          elsif n == 19
-            Post.create(title: '20th post',
-                        body: "body number #{n}",
-                        user_id: Faker::Number.number(8))
-          else
+      context 'when no page number is passed in' do
+        before do
+          15.times do |n|
             Post.create(title: n.to_s,
                         body: "body number #{n}",
                         user_id: Faker::Number.number(4))
           end
         end
-      end
 
-      context 'when no page number is passed in' do
-        xit 'test' do
+        it 'returns the posts without offsetting them' do
+          expect(Post.paginate('').pluck(:title).first).to eq '0'
+          expect(Post.paginate('').pluck(:body).last).to eq 'body number 14'
         end
       end
 
       context 'when a page number is passed in' do
+        before do
+          20.times do |n|
+            if n == 10
+              Post.create(title: '11th post',
+                          body: "body number #{n}",
+                          user_id: Faker::Number.number(8))
+            elsif n == 19
+              Post.create(title: '20th post',
+                          body: "body number #{n}",
+                          user_id: Faker::Number.number(8))
+            else
+              Post.create(title: n.to_s,
+                          body: "body number #{n}",
+                          user_id: Faker::Number.number(4))
+            end
+          end
+        end
+
         it 'paginates the results' do
           expect(Post.paginate('2').pluck(:title).first).to eq '11th post'
           expect(Post.paginate('2').pluck(:title).last).to eq '20th post'
@@ -96,7 +106,22 @@ RSpec.describe Post, type: :model do
 
     context 'class methods' do
       describe 'include_users' do
-        xit 'test' do
+        before do
+          5.times do |n|
+            user = User.create(first_name: "first#{n}",
+                               last_name: "last#{n}",
+                               email: Faker::Internet.email,
+                               password: Faker::Internet.password)
+            user.posts.create(title: n.to_s, body: "body number #{n}")
+          end
+        end
+
+        it 'returns a hash matching the json api spec' do
+          result = Post.include_users(Post.all)[:data]
+          expect(result.first[:attributes][:title]).to eq '0'
+          expect(result.first[:relationships][:author]).to eq 'First0 Last0'
+          expect(result.last[:attributes][:body]).to eq 'body number 4'
+          expect(result.last[:relationships][:author]).to eq 'First4 Last4'
         end
       end
     end

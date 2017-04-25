@@ -8,7 +8,7 @@ class Comment < ActiveRecord::Base
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
   def self.include_users(comments)
-    comments.includes(:user).map do |comment|
+    comment_data = comments.includes(:user).map do |comment|
       {
         type: 'comment',
         id: comment.id,
@@ -16,5 +16,7 @@ class Comment < ActiveRecord::Base
         relationships: { author: comment.user.full_name }
       }
     end
+
+    { data: comment_data }
   end
 end

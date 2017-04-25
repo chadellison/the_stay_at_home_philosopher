@@ -8,7 +8,7 @@ class Post < ActiveRecord::Base
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
   def self.include_users(posts)
-    posts.includes(:user).map do |post|
+    post_data = posts.includes(:user).map do |post|
       {
         type: 'post',
         id: post.id,
@@ -16,5 +16,7 @@ class Post < ActiveRecord::Base
         relationships: { author: post.user.full_name }
       }
     end
+
+    { data: post_data }
   end
 end

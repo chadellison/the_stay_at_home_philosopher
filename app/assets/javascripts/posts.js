@@ -52,7 +52,7 @@ $(document).ready(function() {
   }
 
   function renderPosts(posts) {
-    $.each(posts, function(index, post) {
+    $.each(posts['data'], function(index, post) {
       let title = post.attributes.title
       let body = post.attributes.body.substring(0, 20)
       let author = post.relationships.author

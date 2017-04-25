@@ -30,7 +30,7 @@ describe Api::V1::CommentsController do
       end
 
       get :index, format: :json
-      parsed_response = JSON.parse(response.body)
+      parsed_response = JSON.parse(response.body)['data']
       expect(parsed_response.count).to eq 3
       expect(parsed_response.first['attributes']['body']).to eq 'body0'
       expect(parsed_response.first['relationships']['author']).to eq user.full_name
