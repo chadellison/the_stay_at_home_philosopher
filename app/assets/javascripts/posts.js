@@ -1,14 +1,18 @@
 $(document).ready(function() {
-  $.ajax({
-    type: "GET",
-    url: "/api/v1/posts.json",
-    success: function(posts) {
-      renderPosts(posts)
-    },
-    error: function(errors) {
-      alert(JSON.parse(errors.responseText)["errors"])
-    }
-  })
+  fetchPosts()
+
+  function fetchPosts() {
+    $.ajax({
+      type: "GET",
+      url: "/api/v1/posts.json",
+      success: function(posts) {
+        renderPosts(posts)
+      },
+      error: function(errors) {
+        alert(JSON.parse(errors.responseText)["errors"])
+      }
+    })
+  }
 
   $('.add-post').on('click', function() {
     $('.add-post-form').fadeIn()
@@ -33,7 +37,8 @@ $(document).ready(function() {
       },
       success: function(post) {
         $('.add-post-form').fadeOut()
-        // prepend post
+        removePosts()
+        fetchPosts()
       },
       error: function(errors) {
         let errorMessage = JSON.parse(errors.responseText).errors
@@ -42,6 +47,10 @@ $(document).ready(function() {
     })
   })
 
+  function removePosts() {
+    $('#posts').children().remove()
+  }
+
   function renderPosts(posts) {
     $.each(posts, function(index, post) {
       let title = post.attributes.title
@@ -49,9 +58,11 @@ $(document).ready(function() {
       let author = post.relationships.author
 
       $('#posts').append(
+        "<br>" +
         "<div class='post'>" + "Title: " + title + "</div>" +
         "<div class='post'>" + "Body: " + body + "</div>" +
-        "<div class='post'>" + "Auther: " + author + "</div>"
+        "<div class='post'>" + "Auther: " + author + "</div>" +
+        "<br>"
       )
     })
   }
