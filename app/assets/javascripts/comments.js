@@ -14,30 +14,37 @@ $(document).ready(function() {
     })
   }
 
-  // $('.submit-comment').on('click', function() {
-  //   let title = $('.title-input').val()
-  //   let body = $('.body-input').val()
-  //
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "/api/v1/posts.json",
-  //     data: {
-  //       post: {
-  //         title: title,
-  //         body: body
-  //       }
-  //     },
-  //     success: function(post) {
-  //       $('.add-post-form').fadeOut()
-  //       removePosts()
-  //       fetchPosts()
-  //     },
-  //     error: function(errors) {
-  //       let errorMessage = JSON.parse(errors.responseText).errors
-  //       alert(errorMessage)
-  //     }
-  //   })
-  // })
+  $('.submit-comment').on('click', function() {
+    let body = $('.comment-text-box').val()
+    let index = window.location.pathname.split("/").length - 1
+    let post_id = window.location.pathname.split("/")[index]
+
+    $.ajax({
+      type: "POST",
+      url: "/api/v1/comments.json",
+      data: {
+        comment: { body: body, post_id: post_id }
+      },
+      success: function(comment) {
+        removeComments()
+        fetchComments()
+        $('.comment-text-box').val('')
+      },
+      error: function(errors) {
+        let errorMessage = JSON.parse(errors.responseText).errors
+        alert(errorMessage)
+        $('.comment-text-box').val('')
+      }
+    })
+  })
+
+  $('.cancel-comment').on('click', function() {
+    $('.comment-text-box').val('')
+  })
+
+  function removeComments() {
+    $('#comments').children().remove()
+  }
 
   function renderComments(comments) {
     $.each(comments, function(index, comment) {
