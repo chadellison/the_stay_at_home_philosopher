@@ -9,8 +9,8 @@ module Api
         if user.save
           respond_with user.attributes, location: nil
         else
-          errors = { errors: user.errors }
-          respond_with errors, location: nil, status: 404
+          errors = user.errors.map { |key, value| "#{key} #{value}" }.join("\n")
+          render json: { errors: errors }, status: 404
         end
       end
 

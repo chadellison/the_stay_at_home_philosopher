@@ -11,11 +11,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         end.not_to change { User.count }
 
         expect(response.status).to eq 404
-        error_message = {
-          'password' => ["can't be blank"],
-          'first_name' => ["can't be blank"],
-          'last_name' => ["can't be blank"]
-        }
+        error_message = "password can't be blank\nfirst_name can't be blank\nlast_name can't be blank"
         expect(JSON.parse(response.body)['errors']).to eq error_message
       end
     end

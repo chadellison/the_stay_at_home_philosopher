@@ -7,6 +7,7 @@ gem 'faker'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'pg', '~> 0.15'
+gem 'rack-cors'
 gem 'rails', '4.2.8'
 gem 'responders'
 gem 'rubocop', require: false
