@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :posts, only: [:index, :create]
       resources :comments, only: [:index, :create]
       resources :authentication, only: [:create]
+      resources :users, only: [:create]
     end
   end
 end
