@@ -124,6 +124,11 @@ RSpec.describe Post, type: :model do
           expect(result.last[:relationships][:author]).to eq 'First4 Last4'
         end
       end
+
+      describe 'serialize_post' do
+        xit 'test' do
+        end
+      end
     end
   end
 end

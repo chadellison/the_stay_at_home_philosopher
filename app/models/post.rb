@@ -9,14 +9,18 @@ class Post < ActiveRecord::Base
 
   def self.include_users(posts)
     post_data = posts.includes(:user).map do |post|
-      {
-        type: 'post',
-        id: post.id,
-        attributes: { title: post.title, body: post.body },
-        relationships: { author: post.user.full_name }
-      }
+      serialize_post(post)
     end
 
     { data: post_data }
+  end
+
+  def self.serialize_post(post)
+    {
+      type: 'post',
+      id: post.id,
+      attributes: { title: post.title, body: post.body },
+      relationships: { author: post.user.full_name }
+    }
   end
 end

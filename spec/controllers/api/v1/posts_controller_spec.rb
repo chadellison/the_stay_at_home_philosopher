@@ -37,16 +37,18 @@ describe Api::V1::PostsController do
 
     context 'with a valid post' do
       before do
-        allow(controller).to receive(:authenticate_user!).and_return(user)
-        allow(controller).to receive(:current_user).and_return(user)
+        allow(controller).to receive(:authenticate_with_token).and_return(user)
+        controller.instance_variable_set(:@user, user)
       end
 
       it 'returns a 201 status and the resource' do
         post :create, post: { title: title, body: body }, format: :json
         expect(response.status).to eq 201
-        expect(JSON.parse(response.body)["title"]).to eq title
-        expect(JSON.parse(response.body)["body"]).to eq body
-        expect(JSON.parse(response.body)["user_id"]).to eq user.id
+
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response['attributes']['title']).to eq title
+        expect(parsed_response['attributes']['body']).to eq body
+        expect(parsed_response['relationships']["author"]).to eq user.full_name
       end
 
       it 'creates a new post associated with the current user' do
@@ -61,8 +63,8 @@ describe Api::V1::PostsController do
 
     context 'with an invalid post' do
       before do
-        allow(controller).to receive(:authenticate_user!).and_return(user)
-        allow(controller).to receive(:current_user).and_return(user)
+        allow(controller).to receive(:authenticate_with_token).and_return(user)
+        controller.instance_variable_set(:@user, user)
       end
 
       it 'returns a 400 status' do
@@ -82,12 +84,12 @@ describe Api::V1::PostsController do
       end
     end
 
-    context 'when a user is not logged in' do
+    context 'when a user is not validated' do
       it 'returns an error message' do
-        result = "You need to sign in or sign up before continuing."
+        result = "Invalid Credentials"
 
         post :create, post: { title: title, body: body }, format: :json
-        expect(JSON.parse(response.body)["error"]).to eq result
+        expect(JSON.parse(response.body)["errors"]).to eq result
       end
 
       it 'renders a 401 status' do
