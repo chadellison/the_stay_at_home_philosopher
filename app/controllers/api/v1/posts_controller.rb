@@ -1,6 +1,7 @@
 module Api
   module V1
-    class PostsController < BaseController
+    class PostsController < ApplicationController
+      before_action :authenticate_with_token, only: [:create]
       respond_to :json
 
       def index
@@ -8,10 +9,10 @@ module Api
       end
 
       def create
-        post = current_user.posts.new(post_params)
+        post = @user.posts.new(post_params)
 
         if post.save
-          render json: post, location: nil, status: 201
+          render json: Post.serialize_post(post), location: nil, status: 201
         else
           errors = post.errors.map { |key, value| "#{key} #{value}" }.join("\n")
           render json: { errors: errors }, status: 400
@@ -22,6 +23,12 @@ module Api
 
       def post_params
         params.require(:post).permit(:title, :body)
+      end
+
+      def authenticate_with_token
+        @user = User.find_by(encrypted_password: params[:token])
+        render json: { errors: "Invalid Credentials" }, status: 401 if @user.nil?
+        return if @user.nil?
       end
     end
   end
