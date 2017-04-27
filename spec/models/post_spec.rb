@@ -104,46 +104,133 @@ RSpec.describe Post, type: :model do
       end
     end
 
+    describe 'serialize_post' do
+      let(:title) { Faker::Name.name }
+      let(:body) { Faker::Lorem.paragraph }
+      let(:first_name) { Faker::Name.first_name }
+      let(:last_name) { Faker::Name.last_name }
+
+      it 'returns a json api serialized hash with its author' do
+        user = User.create(first_name: first_name,
+                           last_name: last_name,
+                           email: Faker::Internet.email,
+                           password: Faker::Internet.password)
+
+        post = user.posts.create(title: title,
+                                 body: body)
+        author = "#{first_name.capitalize} #{last_name.capitalize}"
+
+        expect(post.serialize_post[:attributes][:title]).to eq title
+        expect(post.serialize_post[:attributes][:body]).to eq body
+        expect(post.serialize_post[:relationships][:author])
+          .to eq author
+      end
+    end
+
+    describe 'serialize_comments' do
+      let(:user1) do
+        User.create(first_name: 'jones',
+                    last_name: 'bob',
+                    email: Faker::Internet.email,
+                    password: Faker::Internet.password)
+      end
+
+      let(:user2) do
+        User.create(first_name: 'foo',
+                    last_name: 'bar',
+                    email: Faker::Internet.email,
+                    password: Faker::Internet.password)
+      end
+
+      let(:post) do
+        user1.posts.create(title: Faker::Name.name,
+                           body: Faker::Lorem.paragraph)
+      end
+
+      let(:comment_body1) { Faker::Lorem.paragraph }
+      let(:comment_body2) { Faker::Lorem.paragraph }
+
+      before do
+        post.comments.create(
+          body: comment_body1, user_id: user1.id
+        )
+        post.comments.create(
+          body: comment_body2, user_id: user2.id
+        )
+      end
+
+      it 'returns an array of comments with their respective authors' do
+        result = post.serialize_comments
+        expect(result.first).to eq(body: comment_body1, author: 'Jones Bob')
+        expect(result.last).to eq(body: comment_body2, author: 'Foo Bar')
+      end
+    end
+
     context 'class methods' do
-      describe 'include_users' do
-        before do
-          5.times do |n|
-            user = User.create(first_name: "first#{n}",
-                               last_name: "last#{n}",
-                               email: Faker::Internet.email,
-                               password: Faker::Internet.password)
-            user.posts.create(title: n.to_s, body: "body number #{n}")
+      describe 'include_associations' do
+        context 'with users' do
+          before do
+            5.times do |n|
+              user = User.create(first_name: "first#{n}",
+                                 last_name: "last#{n}",
+                                 email: Faker::Internet.email,
+                                 password: Faker::Internet.password)
+              user.posts.create(title: n.to_s, body: "body number #{n}")
+            end
+          end
+
+          it 'returns a hash matching the json api spec' do
+            result = Post.include_associations(Post.all)[:data]
+            expect(result.first[:attributes][:title]).to eq '0'
+            expect(result.first[:relationships][:author]).to eq 'First0 Last0'
+            expect(result.last[:attributes][:body]).to eq 'body number 4'
+            expect(result.last[:relationships][:author]).to eq 'First4 Last4'
           end
         end
 
-        it 'returns a hash matching the json api spec' do
-          result = Post.include_users(Post.all)[:data]
-          expect(result.first[:attributes][:title]).to eq '0'
-          expect(result.first[:relationships][:author]).to eq 'First0 Last0'
-          expect(result.last[:attributes][:body]).to eq 'body number 4'
-          expect(result.last[:relationships][:author]).to eq 'First4 Last4'
-        end
-      end
+        context 'with users and comments present' do
+          let(:comment_body1) { Faker::Lorem.paragraph }
+          let(:comment_body2) { Faker::Lorem.paragraph }
+          let(:comment_body3) { Faker::Lorem.paragraph }
+          let(:user1) do
+            User.create(first_name: 'jones',
+                        last_name: 'bob',
+                        email: Faker::Internet.email,
+                        password: Faker::Internet.password)
+          end
 
-      describe 'serialize_post' do
-        let(:title) { Faker::Name.name }
-        let(:body) { Faker::Lorem.paragraph }
-        let(:first_name) { Faker::Name.first_name }
-        let(:last_name) { Faker::Name.last_name }
+          let(:user2) do
+            User.create(first_name: 'foo',
+                        last_name: 'bar',
+                        email: Faker::Internet.email,
+                        password: Faker::Internet.password)
+          end
 
-        it 'returns a json api serialized hash with its author' do
-          user = User.create(first_name: first_name,
-                             last_name: last_name,
-                             email: Faker::Internet.email,
-                             password: Faker::Internet.password)
+          before do
+            post1 = user1.posts.create(title: 'title1', body: 'body1')
+            post2 = user1.posts.create(title: 'title2', body: 'body2')
+            post3 = user1.posts.create(title: 'title3', body: 'body3')
 
-          post = user.posts.create(title: title,
-                                   body: body)
-          author = "#{first_name.capitalize} #{last_name.capitalize}"
-          
-          expect(Post.serialize_post(post)[:attributes][:title]).to eq title
-          expect(Post.serialize_post(post)[:attributes][:body]).to eq body
-          expect(Post.serialize_post(post)[:relationships][:author]).to eq author
+            post1.comments.create(
+              body: comment_body1, user_id: user1.id
+            )
+            post1.comments.create(
+              body: comment_body2, user_id: user1.id
+            )
+            post3.comments.create(
+              body: comment_body3, user_id: user2.id
+            )
+          end
+
+          it 'returns a json api serialed hash with associated comments' do
+            result = Post.include_associations(Post.all)[:data]
+            expect(result.first[:relationships][:comments].count).to eq 2
+            expect(result.last[:relationships][:comments].count).to eq 1
+            expect(result.first[:relationships][:comments].second[:author])
+              .to eq 'Jones Bob'
+            expect(result.last[:relationships][:comments].first[:author])
+              .to eq 'Foo Bar'
+          end
         end
       end
     end

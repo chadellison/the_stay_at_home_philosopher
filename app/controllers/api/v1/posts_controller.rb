@@ -5,19 +5,19 @@ module Api
       respond_to :json
 
       def index
-        respond_with Post.include_users(Post.post_order.paginate(params[:page]))
+        posts = Post.post_order.paginate(params[:page])
+        respond_with Post.include_associations(posts)
       end
 
       def show
-        post = Post.find(params[:id])
-        render json: Post.serialize_post(post)
+        render json: Post.find(params[:id]).serialize_post
       end
 
       def create
         post = @user.posts.new(post_params)
 
         if post.save
-          render json: Post.serialize_post(post), status: 201
+          render json: post.serialize_post, status: 201
         else
           errors = post.errors.map { |key, value| "#{key} #{value}" }.join("\n")
           render json: { errors: errors }, status: 400
