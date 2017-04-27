@@ -7,16 +7,16 @@ class Comment < ActiveRecord::Base
   scope :comment_order, (-> { order(:created_at, :updated_at).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
-  def self.include_users(comments)
-    comment_data = comments.includes(:user).map do |comment|
-      {
-        type: 'comment',
-        id: comment.id,
-        attributes: { body: comment.body },
-        relationships: { author: comment.user.full_name }
-      }
-    end
-
-    { data: comment_data }
+  def include_user
+    {
+      type: 'comment',
+      id: id,
+      attributes: {
+        body: body,
+        created_at: created_at.to_date,
+        updated_at: updated_at.to_date
+      },
+      relationships: { author: user.full_name }
+    }
   end
 end

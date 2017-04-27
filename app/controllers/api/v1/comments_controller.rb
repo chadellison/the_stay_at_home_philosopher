@@ -1,17 +1,14 @@
 module Api
   module V1
     class CommentsController < BaseController
+      before_action :authenticate_with_token, only: [:create]
       respond_to :json
 
-      def index
-        respond_with Comment.include_users(Comment.comment_order.paginate(params[:page]))
-      end
-
       def create
-        comment = current_user.comments.new(comment_params)
+        comment = @user.comments.new(comment_params)
 
         if comment.save
-          render json: comment, location: nil, status: 201
+          render json: comment.include_user, status: 201
         else
           errors = comment.errors.map { |key, value| "#{key} #{value}" }.join("\n")
           render json: { errors: errors }, status: 400
