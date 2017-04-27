@@ -16,9 +16,13 @@ class Post < ActiveRecord::Base
     {
       type: 'post',
       id: id,
-      attributes: { title: title, body: body },
-      relationships: { author: user.full_name,
-                       comments: serialize_comments }
+      attributes: {
+        title: title,
+        body: body,
+        created_at: created_at.to_date,
+        updated_at: updated_at.to_date
+      },
+      relationships: { author: user.full_name, comments: serialize_comments }
     }
   end
 
