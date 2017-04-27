@@ -17,7 +17,7 @@ RSpec.feature 'user can visit home page' do
                 password:   Faker::Internet.password)
   end
 
-  scenario 'user sees posts' do
+  xscenario 'user sees posts' do
     post1 = user1.posts.create(title: title, body: body)
     post2 = user2.posts.create(title: title, body: body)
     post3 = user1.posts.create(title: title, body: body)
