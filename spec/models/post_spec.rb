@@ -150,19 +150,22 @@ RSpec.describe Post, type: :model do
       let(:comment_body1) { Faker::Lorem.paragraph }
       let(:comment_body2) { Faker::Lorem.paragraph }
 
-      before do
-        post.comments.create(
-          body: comment_body1, user_id: user1.id
-        )
-        post.comments.create(
-          body: comment_body2, user_id: user2.id
-        )
+      let!(:comment1) do
+        post.comments.create(body: comment_body1, user_id: user1.id)
+      end
+
+      let!(:comment2) do
+        post.comments.create(body: comment_body2, user_id: user2.id)
       end
 
       it 'returns an array of comments with their respective authors' do
         result = post.serialize_comments
-        expect(result.first).to eq(body: comment_body1, author: 'Jones Bob')
-        expect(result.last).to eq(body: comment_body2, author: 'Foo Bar')
+        expect(result.first).to eq(id: comment1.id,
+                                   body: comment_body1,
+                                   author: 'Jones Bob')
+        expect(result.last).to eq(id: comment2.id,
+                                  body: comment_body2,
+                                  author: 'Foo Bar')
       end
     end
 

@@ -24,7 +24,7 @@ class Post < ActiveRecord::Base
 
   def serialize_comments
     comments.map do |comment|
-      { body: comment.body, author: comment.user.full_name }
+      { id: comment.id, body: comment.body, author: comment.user.full_name }
     end
   end
 end
