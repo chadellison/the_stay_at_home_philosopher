@@ -159,13 +159,26 @@ RSpec.describe Post, type: :model do
       end
 
       it 'returns an array of comments with their respective authors' do
+        created_at1 = comment1.created_at.to_date
+        created_at2 = comment2.created_at.to_date
+
         result = post.serialize_comments
         expect(result.first).to eq(id: comment1.id,
-                                   body: comment_body1,
-                                   author: 'Jones Bob')
+                                   type: 'comment',
+                                   attributes: {
+                                     body: comment_body1,
+                                     created_at: created_at1,
+                                     updated_at: created_at1
+                                   },
+                                   relationships: { author: 'Jones Bob' })
         expect(result.last).to eq(id: comment2.id,
-                                  body: comment_body2,
-                                  author: 'Foo Bar')
+                                  type: 'comment',
+                                  attributes: {
+                                    body: comment_body2,
+                                    created_at: created_at2,
+                                    updated_at: created_at2
+                                  },
+                                  relationships: { author: 'Foo Bar' })
       end
     end
 
@@ -229,9 +242,9 @@ RSpec.describe Post, type: :model do
             result = Post.include_associations(Post.all)[:data]
             expect(result.first[:relationships][:comments].count).to eq 2
             expect(result.last[:relationships][:comments].count).to eq 1
-            expect(result.first[:relationships][:comments].second[:author])
+            expect(result.first[:relationships][:comments].second[:relationships][:author])
               .to eq 'Jones Bob'
-            expect(result.last[:relationships][:comments].first[:author])
+            expect(result.last[:relationships][:comments].first[:relationships][:author])
               .to eq 'Foo Bar'
           end
         end
