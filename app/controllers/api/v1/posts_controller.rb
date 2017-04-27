@@ -8,11 +8,16 @@ module Api
         respond_with Post.include_users(Post.post_order.paginate(params[:page]))
       end
 
+      def show
+        post = Post.find(params[:id])
+        render json: Post.serialize_post(post)
+      end
+
       def create
         post = @user.posts.new(post_params)
 
         if post.save
-          render json: Post.serialize_post(post), location: nil, status: 201
+          render json: Post.serialize_post(post), status: 201
         else
           errors = post.errors.map { |key, value| "#{key} #{value}" }.join("\n")
           render json: { errors: errors }, status: 400

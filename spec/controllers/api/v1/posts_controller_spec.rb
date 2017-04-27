@@ -96,6 +96,39 @@ describe Api::V1::PostsController do
         post :create, post: { title: title, body: body }, format: :json
         expect(response.status).to eq 401
       end
+
+      it 'does not attempt to create a post' do
+        expect_any_instance_of(Post).not_to receive(:save)
+        post :create, post: { title: title, body: body }, format: :json
+      end
+    end
+  end
+
+  describe 'show' do
+    context 'with a successful id' do
+      let(:title) { Faker::Name.name }
+      let(:body) { Faker::Lorem.paragraph }
+
+      let(:user) do
+        User.create(first_name: Faker::Name.first_name,
+                    last_name:  Faker::Name.last_name,
+                    email:      Faker::Internet.email,
+                    password:   Faker::Internet.password)
+      end
+
+      let(:post) { user.posts.create(title: title, body: body) }
+
+      it 'returns the json api serialized post' do
+        get :show, id: post.id
+        parsed_response = JSON.parse(response.body)
+
+        author = "#{user.first_name.capitalize} #{user.last_name.capitalize}"
+
+        expect(parsed_response['attributes']['title']).to eq title
+        expect(parsed_response['attributes']['body']).to eq body
+        expect(parsed_response['relationships']['author']).to eq author
+        expect(parsed_response['id']).to eq post.id
+      end
     end
   end
 end

@@ -126,7 +126,24 @@ RSpec.describe Post, type: :model do
       end
 
       describe 'serialize_post' do
-        xit 'test' do
+        let(:title) { Faker::Name.name }
+        let(:body) { Faker::Lorem.paragraph }
+        let(:first_name) { Faker::Name.first_name }
+        let(:last_name) { Faker::Name.last_name }
+
+        it 'returns a json api serialized hash with its author' do
+          user = User.create(first_name: first_name,
+                             last_name: last_name,
+                             email: Faker::Internet.email,
+                             password: Faker::Internet.password)
+
+          post = user.posts.create(title: title,
+                                   body: body)
+          author = "#{first_name.capitalize} #{last_name.capitalize}"
+          
+          expect(Post.serialize_post(post)[:attributes][:title]).to eq title
+          expect(Post.serialize_post(post)[:attributes][:body]).to eq body
+          expect(Post.serialize_post(post)[:relationships][:author]).to eq author
         end
       end
     end
