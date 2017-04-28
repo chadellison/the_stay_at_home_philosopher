@@ -20,8 +20,8 @@ RSpec.describe Api::V1::AuthenticationController, type: :controller do
         parsed_response = JSON.parse(response.body)
 
         expect(response.status).to eq 200
-        expect(parsed_response['email']).to eq email
-        expect(parsed_response['encrypted_password']).to be_present
+        expect(parsed_response['attributes']['email']).to eq email
+        expect(parsed_response['attributes']['encrypted_password']).to be_present
       end
     end
 
@@ -56,8 +56,8 @@ RSpec.describe Api::V1::AuthenticationController, type: :controller do
                       format: :json
 
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)['email']).to eq email
-        expect(JSON.parse(response.body)['encrypted_password']).to be_present
+        expect(JSON.parse(response.body)['attributes']['email']).to eq email
+        expect(JSON.parse(response.body)['attributes']['encrypted_password']).to be_present
       end
     end
   end

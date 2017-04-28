@@ -7,7 +7,7 @@ module Api
         user = User.find_by(email: login_params[:email].downcase)
 
         if user && user.valid_password?(login_params[:password])
-          respond_with user.attributes, location: nil, status: 200
+          respond_with user.serialize_user, location: nil, status: 200
         else
           message = { errors: 'Invalid Credentials' }
           respond_with message, location: nil, status: 404
