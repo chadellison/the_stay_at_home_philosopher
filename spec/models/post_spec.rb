@@ -251,6 +251,11 @@ RSpec.describe Post, type: :model do
       end
     end
 
+    describe 'downcase_values' do
+      xit 'test' do
+      end
+    end
+
     context 'class methods' do
       describe 'include_associations' do
         context 'with users' do
