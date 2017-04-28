@@ -4,7 +4,7 @@ class Post < ActiveRecord::Base
   has_many :comments
   validates_presence_of :user_id, :title, :body
 
-  scope :post_order, (-> { order(created_at: :desc, updated_at: :desc).limit(10) })
+  scope :order_and_offset, (-> { order(created_at: :desc, updated_at: :desc).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
   def self.include_associations(posts)
