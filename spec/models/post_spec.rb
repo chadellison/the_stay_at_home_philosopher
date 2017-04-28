@@ -178,8 +178,8 @@ RSpec.describe Post, type: :model do
                                  body: body)
         author = "#{first_name.capitalize} #{last_name.capitalize}"
 
-        expect(post.serialize_post[:attributes][:title]).to eq title
-        expect(post.serialize_post[:attributes][:body]).to eq body
+        expect(post.serialize_post[:attributes][:title]).to eq title.downcase
+        expect(post.serialize_post[:attributes][:body]).to eq body.downcase
         expect(post.serialize_post[:relationships][:author][:data][:name])
           .to eq author
       end
@@ -248,6 +248,11 @@ RSpec.describe Post, type: :model do
                                                      email: user2.email }
                                            }
                                          })
+      end
+    end
+
+    describe 'downcase_values' do
+      xit 'test' do
       end
     end
 

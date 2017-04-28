@@ -12,7 +12,6 @@ module Api
         user = User.new(user_params)
 
         if user.save
-          # 'attributes' call is so that we can send the user's token to client
           respond_with user.serialize_user, location: nil
         else
           errors = user.errors.map { |key, value| "#{key} #{value}" }.join("\n")

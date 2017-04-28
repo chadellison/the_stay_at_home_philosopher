@@ -46,8 +46,8 @@ describe Api::V1::PostsController do
         expect(response.status).to eq 201
 
         parsed_response = JSON.parse(response.body)
-        expect(parsed_response['attributes']['title']).to eq title
-        expect(parsed_response['attributes']['body']).to eq body
+        expect(parsed_response['attributes']['title']).to eq title.downcase
+        expect(parsed_response['attributes']['body']).to eq body.downcase
         expect(parsed_response['relationships']['author']['data']['name']).to eq user.full_name
       end
 
@@ -56,8 +56,8 @@ describe Api::V1::PostsController do
           post :create, post: { title: title, body: body }, format: :json
         end.to change { Post.count && user.posts.count }.by(1)
 
-        expect(user.posts.last.title).to eq title
-        expect(user.posts.last.body).to eq body
+        expect(user.posts.last.title).to eq title.downcase
+        expect(user.posts.last.body).to eq body.downcase
       end
     end
 
@@ -124,8 +124,8 @@ describe Api::V1::PostsController do
 
         author = "#{user.first_name.capitalize} #{user.last_name.capitalize}"
 
-        expect(parsed_response['attributes']['title']).to eq title
-        expect(parsed_response['attributes']['body']).to eq body
+        expect(parsed_response['attributes']['title']).to eq title.downcase
+        expect(parsed_response['attributes']['body']).to eq body.downcase
         expect(parsed_response['relationships']['author']['data']['name']).to eq author
         expect(parsed_response['id']).to eq post.id
       end
