@@ -4,10 +4,10 @@ class Comment < ActiveRecord::Base
 
   validates_presence_of :body, :user_id, :post_id
 
-  scope :comment_order, (-> { order(:created_at, :updated_at).limit(10) })
+  scope :order_and_limit, (-> { order(:created_at, :updated_at).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
-  def include_user
+  def serialize_comment
     {
       type: 'comment',
       id: id,

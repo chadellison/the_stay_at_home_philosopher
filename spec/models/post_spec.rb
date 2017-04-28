@@ -44,7 +44,7 @@ RSpec.describe Post, type: :model do
   end
 
   context 'scopes' do
-    describe 'order_and_offset' do
+    describe 'order_and_limit' do
       it 'orders the posts in descending order' do
         post1 = Post.create(title: Faker::Name.name,
                             body: Faker::Lorem.paragraph,
@@ -58,7 +58,7 @@ RSpec.describe Post, type: :model do
                             body: Faker::Lorem.paragraph,
                             user_id: Faker::Number.number(4))
 
-        expect(Post.order_and_offset).to eq [post3, post2, post1]
+        expect(Post.order_and_limit).to eq [post3, post2, post1]
       end
     end
 
@@ -127,7 +127,7 @@ RSpec.describe Post, type: :model do
       end
     end
 
-    describe 'serialize_comments' do
+    context 'with comments' do
       let(:user1) do
         User.create(first_name: 'jones',
                     last_name: 'bob',
@@ -158,11 +158,11 @@ RSpec.describe Post, type: :model do
         post.comments.create(body: comment_body2, user_id: user2.id)
       end
 
-      it 'returns an array of comments with their respective authors' do
+      it 'includes an array of comments with their respective authors' do
         created_at1 = comment1.created_at.to_date
         created_at2 = comment2.created_at.to_date
 
-        result = post.serialize_comments
+        result = post.serialize_post[:relationships][:comments]
         expect(result.first).to eq(id: comment1.id,
                                    type: 'comment',
                                    attributes: {
