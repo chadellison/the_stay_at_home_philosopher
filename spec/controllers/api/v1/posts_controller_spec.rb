@@ -21,7 +21,7 @@ describe Api::V1::PostsController do
       expect(parsed_response.count).to eq 3
       expect(parsed_response.first['attributes']['title']).to eq 'title2'
       expect(parsed_response.last['attributes']['body']).to eq 'body0'
-      expect(parsed_response.last['relationships']['author']).to eq user.full_name
+      expect(parsed_response.last['relationships']['author']['data']['name']).to eq user.full_name
     end
   end
 
@@ -48,7 +48,7 @@ describe Api::V1::PostsController do
         parsed_response = JSON.parse(response.body)
         expect(parsed_response['attributes']['title']).to eq title
         expect(parsed_response['attributes']['body']).to eq body
-        expect(parsed_response['relationships']["author"]).to eq user.full_name
+        expect(parsed_response['relationships']['author']['data']['name']).to eq user.full_name
       end
 
       it 'creates a new post associated with the current user' do
@@ -126,7 +126,7 @@ describe Api::V1::PostsController do
 
         expect(parsed_response['attributes']['title']).to eq title
         expect(parsed_response['attributes']['body']).to eq body
-        expect(parsed_response['relationships']['author']).to eq author
+        expect(parsed_response['relationships']['author']['data']['name']).to eq author
         expect(parsed_response['id']).to eq post.id
       end
     end

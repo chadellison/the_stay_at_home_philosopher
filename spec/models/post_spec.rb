@@ -122,7 +122,7 @@ RSpec.describe Post, type: :model do
 
         expect(post.serialize_post[:attributes][:title]).to eq title
         expect(post.serialize_post[:attributes][:body]).to eq body
-        expect(post.serialize_post[:relationships][:author])
+        expect(post.serialize_post[:relationships][:author][:data][:name])
           .to eq author
       end
     end
@@ -163,22 +163,33 @@ RSpec.describe Post, type: :model do
         created_at2 = comment2.created_at.to_date
 
         result = post.serialize_post[:relationships][:comments]
-        expect(result.first).to eq(id: comment1.id,
-                                   type: 'comment',
-                                   attributes: {
-                                     body: comment_body1,
-                                     created_at: created_at1,
-                                     updated_at: created_at1
-                                   },
-                                   relationships: { author: 'Jones Bob' })
-        expect(result.last).to eq(id: comment2.id,
-                                  type: 'comment',
-                                  attributes: {
-                                    body: comment_body2,
-                                    created_at: created_at2,
-                                    updated_at: created_at2
-                                  },
-                                  relationships: { author: 'Foo Bar' })
+        # binding.pry
+        expect(result[:data].first).to eq(id: comment1.id,
+                                          type: 'comment',
+                                          attributes: {
+                                            body: comment_body1,
+                                            created_at: created_at1,
+                                            updated_at: created_at1
+                                          },
+                                          relationships: {
+                                            author: {
+                                              data: { name: 'Jones Bob',
+                                                      email: user1.email }
+                                            }
+                                          })
+        expect(result[:data].last).to eq(id: comment2.id,
+                                         type: 'comment',
+                                         attributes: {
+                                           body: comment_body2,
+                                           created_at: created_at2,
+                                           updated_at: created_at2
+                                         },
+                                         relationships: {
+                                           author: {
+                                             data: { name: 'Foo Bar',
+                                                     email: user2.email }
+                                           }
+                                         })
       end
     end
 
@@ -198,9 +209,11 @@ RSpec.describe Post, type: :model do
           it 'returns a hash matching the json api spec' do
             result = Post.include_associations(Post.all)[:data]
             expect(result.first[:attributes][:title]).to eq '0'
-            expect(result.first[:relationships][:author]).to eq 'First0 Last0'
+            expect(result.first[:relationships][:author][:data][:name])
+              .to eq 'First0 Last0'
             expect(result.last[:attributes][:body]).to eq 'body number 4'
-            expect(result.last[:relationships][:author]).to eq 'First4 Last4'
+            expect(result.last[:relationships][:author][:data][:name])
+              .to eq 'First4 Last4'
           end
         end
 
@@ -240,11 +253,13 @@ RSpec.describe Post, type: :model do
 
           it 'returns a json api serialed hash with associated comments' do
             result = Post.include_associations(Post.all)[:data]
-            expect(result.first[:relationships][:comments].count).to eq 2
-            expect(result.last[:relationships][:comments].count).to eq 1
-            expect(result.first[:relationships][:comments].second[:relationships][:author])
+            expect(result.first[:relationships][:comments][:data].count).to eq 2
+            expect(result.last[:relationships][:comments][:data].count).to eq 1
+            expect(result.first[:relationships][:comments][:data]
+              .second[:relationships][:author][:data][:name])
               .to eq 'Jones Bob'
-            expect(result.last[:relationships][:comments].first[:relationships][:author])
+            expect(result.last[:relationships][:comments][:data]
+              .first[:relationships][:author][:data][:name])
               .to eq 'Foo Bar'
           end
         end
