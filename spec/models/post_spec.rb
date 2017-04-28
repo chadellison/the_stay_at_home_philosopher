@@ -44,7 +44,7 @@ RSpec.describe Post, type: :model do
   end
 
   context 'scopes' do
-    describe 'post_order' do
+    describe 'order_and_offset' do
       it 'orders the posts in descending order' do
         post1 = Post.create(title: Faker::Name.name,
                             body: Faker::Lorem.paragraph,
@@ -58,7 +58,7 @@ RSpec.describe Post, type: :model do
                             body: Faker::Lorem.paragraph,
                             user_id: Faker::Number.number(4))
 
-        expect(Post.post_order).to eq [post3, post2, post1]
+        expect(Post.order_and_offset).to eq [post3, post2, post1]
       end
     end
 
