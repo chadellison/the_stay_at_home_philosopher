@@ -11,4 +11,22 @@ class User < ActiveRecord::Base
   def full_name
     first_name.capitalize + ' ' + last_name.capitalize
   end
+
+  def serialize_user
+    {
+      type: 'user',
+      id: id,
+      attributes: {
+        first_name:         first_name,
+        last_name:          last_name,
+        email:              email,
+        encrypted_password: encrypted_password,
+        about_me:           about_me
+      },
+      relationships: {
+        comments: { data: comments.map(&:serialize_comment) },
+        posts: { data: posts.map(&:serialize_post) }
+      }
+    }
+  end
 end

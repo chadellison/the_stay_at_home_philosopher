@@ -61,11 +61,26 @@ RSpec.describe User, type: :model do
       password = Faker::Internet.password
       user = User.new(email: Faker::Internet.email,
                       password: password,
-                      password_confirmation: password,
                       first_name: 'bob',
                       last_name: 'jones')
 
       expect(user.full_name).to eq 'Bob Jones'
+    end
+  end
+
+  describe 'serialize_user' do
+    it 'returns a json api serialzed user' do
+      user = User.new(email: Faker::Internet.email,
+                      password: password,
+                      first_name: 'bob',
+                      last_name: 'jones',
+                      about_me: 'about bob jones')
+
+      expect(user.serialize_user[:attributes][:first_name]).to eq 'bob'
+      expect(user.serialize_user[:attributes][:last_name]).to eq 'jones'
+      expect(user.serialize_user[:attributes][:about_me]).to eq 'about bob jones'
+      expect(user.serialize_user[:relationships][:posts][:data]).to eq []
+      expect(user.serialize_user[:relationships][:comments][:data]).to eq []
     end
   end
 end
