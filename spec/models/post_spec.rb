@@ -78,6 +78,64 @@ RSpec.describe Post, type: :model do
         end
       end
 
+      describe 'search' do
+        let(:user) do
+          User.create(first_name: Faker::Name.first_name,
+                      last_name: Faker::Name.last_name,
+                      email: Faker::Internet.email,
+                      password: Faker::Internet.password)
+        end
+
+        context 'when no search text is present' do
+          before do
+            3.times do |n|
+              user.posts.create(title: "Title#{n}", body: "Body#{n}")
+            end
+          end
+
+          it 'does nothing' do
+            expect(Post).not_to receive(:where)
+            Post.search('')
+          end
+        end
+
+        context "when the search text matches text in posts' titles" do
+          before do
+            user.posts.create(title: "jones", body: "body#{rand(10)}")
+            user.posts.create(title: "bob", body: "body#{rand(10)}")
+            user.posts.create(title: "jones", body: "body#{rand(10)}")
+          end
+
+          it 'returns the matching records' do
+            expect(Post.search('one').pluck(:title)).to eq ['jones', 'jones']
+          end
+        end
+
+        context "when the search text matches text in a post's body" do
+          before do
+            user.posts.create(title: "title#{rand(10)}", body: "story")
+            user.posts.create(title: "title#{rand(10)}", body: "okay")
+            user.posts.create(title: "title#{rand(10)}", body: "story")
+          end
+
+          it 'returns the matching records' do
+            expect(Post.search('or').pluck(:body)).to eq ['story', 'story']
+          end
+        end
+
+        context 'when the search text does not match a title or body text' do
+          before do
+            user.posts.create(title: "title#{rand(10)}", body: "story")
+            user.posts.create(title: "title#{rand(10)}", body: "okay")
+            user.posts.create(title: "title#{rand(10)}", body: "story")
+          end
+
+          it 'returns no records' do
+            expect(Post.search('zzz').pluck(:body)).to eq []
+          end
+        end
+      end
+
       context 'when a page number is passed in' do
         before do
           20.times do |n|
@@ -207,7 +265,7 @@ RSpec.describe Post, type: :model do
           end
 
           it 'returns a hash matching the json api spec' do
-            result = Post.include_associations(Post.all)[:data]
+            result = Post.include_associations[:data]
             expect(result.first[:attributes][:title]).to eq '0'
             expect(result.first[:relationships][:author][:data][:name])
               .to eq 'First0 Last0'
@@ -252,7 +310,7 @@ RSpec.describe Post, type: :model do
           end
 
           it 'returns a json api serialed hash with associated comments' do
-            result = Post.include_associations(Post.all)[:data]
+            result = Post.include_associations[:data]
             expect(result.first[:relationships][:comments][:data].count).to eq 2
             expect(result.last[:relationships][:comments][:data].count).to eq 1
             expect(result.first[:relationships][:comments][:data]

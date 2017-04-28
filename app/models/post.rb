@@ -7,9 +7,12 @@ class Post < ActiveRecord::Base
   scope :order_and_limit, (-> { order(created_at: :desc, updated_at: :desc).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
-  def self.include_associations(posts)
-    post_data = posts.includes(:user, :comments).map(&:serialize_post)
-    { data: post_data }
+  scope :search, (lambda do |text|
+    where('title LIKE ? OR body LIKE ?', "%#{text.downcase}%", "%#{text.downcase}%") if text.present?
+  end)
+
+  def self.include_associations
+    { data: includes(:user, :comments).map(&:serialize_post) }
   end
 
   def serialize_post
