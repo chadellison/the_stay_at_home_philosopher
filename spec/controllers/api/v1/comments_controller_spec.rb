@@ -34,7 +34,8 @@ describe Api::V1::CommentsController do
       expect(parsed_response.count).to eq 3
       expect(parsed_response.first['attributes']['body']).to eq 'body0'
       expect(parsed_response.last['attributes']['body']).to eq 'body2'
-      expect(parsed_response.last['relationships']['author']).to eq user.full_name
+      expect(parsed_response.last['relationships']['author']['data']['name'])
+        .to eq user.full_name
     end
   end
 
@@ -74,7 +75,7 @@ describe Api::V1::CommentsController do
 
         parsed_response = JSON.parse(response.body)
         expect(parsed_response['attributes']['body']).to eq comment_body
-        expect(parsed_response['relationships']['author'])
+        expect(parsed_response['relationships']['author']['data']['name'])
           .to eq different_user.full_name
       end
 
@@ -88,7 +89,8 @@ describe Api::V1::CommentsController do
         }.by(1)
 
         result = JSON.parse(response.body)
-        expect(result['relationships']['author']).to eq different_user.full_name
+        expect(result['relationships']['author']['data']['name'])
+          .to eq different_user.full_name
         expect(different_user.comments.last.body).to eq comment_body
         expect(current_post.comments.last.body).to eq comment_body
       end
