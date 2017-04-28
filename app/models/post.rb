@@ -4,6 +4,8 @@ class Post < ActiveRecord::Base
   has_many :comments
   validates_presence_of :user_id, :title, :body
 
+  before_save :downcase_values
+
   scope :order_and_limit, (-> { order(created_at: :desc, updated_at: :desc).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
@@ -30,5 +32,10 @@ class Post < ActiveRecord::Base
         comments: { data: comments.map(&:serialize_comment) }
       }
     }
+  end
+
+  def downcase_values
+    title.downcase!
+    body.downcase!
   end
 end
