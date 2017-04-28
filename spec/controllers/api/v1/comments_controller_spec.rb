@@ -1,6 +1,43 @@
 require 'rails_helper'
 
 describe Api::V1::CommentsController do
+  describe 'index' do
+    let(:user) do
+      User.create(first_name: Faker::Name.first_name,
+                  last_name: Faker::Name.last_name,
+                  email: Faker::Internet.email,
+                  password: Faker::Internet.password)
+    end
+
+    let(:post) do
+      user.posts.create(title: Faker::Name.name, body: Faker::Lorem.paragraph)
+    end
+
+    before do
+      3.times do |n|
+        user.comments.create(body: "body#{n}", post_id: post.id)
+      end
+    end
+
+    it 'returns a 200 status' do
+      get :index, post_id: post.id, format: :json
+      expect(response.status).to eq 200
+    end
+
+    it 'returns all of the comments associated with a post and their authors' do
+      other_post = user.posts.create(title: Faker::Name.name,
+                                     body: Faker::Lorem.paragraph)
+      other_post.comments.create(body: Faker::Lorem.paragraph, user_id: user.id)
+
+      get :index, post_id: post.id, format: :json
+      parsed_response = JSON.parse(response.body)['data']
+      expect(parsed_response.count).to eq 3
+      expect(parsed_response.first['attributes']['body']).to eq 'body0'
+      expect(parsed_response.last['attributes']['body']).to eq 'body2'
+      expect(parsed_response.last['relationships']['author']).to eq user.full_name
+    end
+  end
+
   describe 'create' do
     let(:body) { Faker::Lorem.paragraph }
     let(:user) do

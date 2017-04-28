@@ -4,7 +4,7 @@ class Post < ActiveRecord::Base
   has_many :comments
   validates_presence_of :user_id, :title, :body
 
-  scope :order_and_offset, (-> { order(created_at: :desc, updated_at: :desc).limit(10) })
+  scope :order_and_limit, (-> { order(created_at: :desc, updated_at: :desc).limit(10) })
   scope :paginate, (->(page) { offset((page.to_i - 1) * 10) if page.present? })
 
   def self.include_associations(posts)
@@ -22,21 +22,10 @@ class Post < ActiveRecord::Base
         created_at: created_at.to_date,
         updated_at: updated_at.to_date
       },
-      relationships: { author: user.full_name, comments: serialize_comments }
-    }
-  end
-
-  def serialize_comments
-    comments.map do |comment|
-      {
-        type: 'comment',
-        id: comment.id,
-        attributes: {
-          body: comment.body, created_at: created_at.to_date,
-          updated_at: updated_at.to_date
-        },
-        relationships: { author: comment.user.full_name }
+      relationships: {
+        author: user.full_name,
+        comments: comments.map(&:serialize_comment)
       }
-    end
+    }
   end
 end

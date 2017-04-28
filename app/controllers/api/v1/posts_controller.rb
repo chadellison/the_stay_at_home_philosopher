@@ -5,7 +5,7 @@ module Api
       respond_to :json
 
       def index
-        posts = Post.order_and_offset.paginate(params[:page])
+        posts = Post.order_and_limit.paginate(params[:page])
         respond_with Post.include_associations(posts)
       end
 
