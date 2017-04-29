@@ -328,6 +328,7 @@ RSpec.describe Post, type: :model do
             expect(result.first[:relationships][:comments][:data]
               .second[:relationships][:author][:data][:name])
               .to eq 'Jones Bob'
+
             expect(result.last[:relationships][:comments][:data]
               .first[:relationships][:author][:data][:name])
               .to eq 'Foo Bar'
