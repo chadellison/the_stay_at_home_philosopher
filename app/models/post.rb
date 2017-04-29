@@ -29,7 +29,8 @@ class Post < ActiveRecord::Base
         updated_at: updated_at.to_date
       },
       relationships: {
-        author: { data: { name: user.full_name, email: user.email,
+        author: { data: { name: user.full_name,
+                          hashed_email: user.hashed_email,
                           about_me: user.about_me } },
         comments: { data: comments.map(&:serialize_comment) }
       }

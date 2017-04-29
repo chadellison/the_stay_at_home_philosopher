@@ -231,7 +231,7 @@ RSpec.describe Post, type: :model do
                                           relationships: {
                                             author: {
                                               data: { name: 'Jones Bob',
-                                                      email: user1.email }
+                                                      hashed_email: user1.hashed_email }
                                             }
                                           })
         expect(result[:data].last).to eq(id: comment2.id,
@@ -244,7 +244,7 @@ RSpec.describe Post, type: :model do
                                          relationships: {
                                            author: {
                                              data: { name: 'Foo Bar',
-                                                     email: user2.email }
+                                                     hashed_email: user2.hashed_email }
                                            }
                                          })
       end
