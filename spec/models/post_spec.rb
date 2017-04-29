@@ -221,7 +221,6 @@ RSpec.describe Post, type: :model do
         created_at2 = comment2.created_at.to_date
 
         result = post.serialize_post[:relationships][:comments]
-        # binding.pry
         expect(result[:data].first).to eq(id: comment1.id,
                                           type: 'comment',
                                           attributes: {

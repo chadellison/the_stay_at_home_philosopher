@@ -4,7 +4,7 @@ Rails.application.routes.draw do
       resources :posts, only: [:index, :create, :show]
       resources :comments, only: [:index, :create]
       resources :authentication, only: [:create]
-      resources :users, only: [:create, :show]
+      resources :users, only: [:create]
     end
   end
 end

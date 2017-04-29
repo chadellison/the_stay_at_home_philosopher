@@ -3,11 +3,6 @@ module Api
     class UsersController < ApplicationController
       respond_to :json
 
-      def show
-        user = User.find(params[:id])
-        respond_with user.serialize_user
-      end
-
       def create
         user = User.new(user_params)
 
