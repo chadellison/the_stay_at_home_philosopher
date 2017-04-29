@@ -7,7 +7,7 @@ require 'rails_helper'
 # creating one), this test does not create any resources.
 RSpec.feature 'user can visit home page', js: true do
   scenario 'user sees posts' do
-    visit "localhost:3000"
+    visit 'https://the-stay-at-home-philosopher.herokuapp.com/'
     expect(page).to have_content('The Stay at Home Philosopher')
     expect(page).to have_content('Browse and contribute to posts!')
     expect(page).to have_content('login')
