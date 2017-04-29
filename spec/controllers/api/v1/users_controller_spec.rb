@@ -1,26 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  describe 'show' do
-    let(:first_name) { Faker::Name.first_name }
-    let(:last_name) { Faker::Name.last_name }
-    let(:email) { Faker::Internet.email }
-    let(:user) do
-      User.create(first_name: first_name,
-                  last_name: last_name,
-                  email: email,
-                  password: Faker::Internet.password)
-    end
-
-    it 'returns the user' do
-      get :show, id: user.id, format: :json
-      expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['attributes']['first_name']).to eq first_name
-      expect(JSON.parse(response.body)['attributes']['last_name']).to eq last_name
-      expect(JSON.parse(response.body)['attributes']['email']).to eq email
-    end
-  end
-
   describe 'create' do
     context 'with incomplete information' do
       it 'returns an error' do
