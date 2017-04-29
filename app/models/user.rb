@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   has_many :comments
   validates_presence_of :first_name, :last_name
 
+  before_save :hash_email
+
   def full_name
     first_name.capitalize + ' ' + last_name.capitalize
   end
@@ -19,7 +21,7 @@ class User < ActiveRecord::Base
       attributes: {
         first_name:         first_name,
         last_name:          last_name,
-        email:              email,
+        hashed_email:       hashed_email,
         encrypted_password: encrypted_password,
         about_me:           about_me
       },
@@ -28,5 +30,9 @@ class User < ActiveRecord::Base
         posts: { data: posts.map(&:serialize_post) }
       }
     }
+  end
+
+  def hash_email
+    self.hashed_email = Digest::MD5.hexdigest(email.downcase.strip)
   end
 end

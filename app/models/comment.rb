@@ -17,7 +17,7 @@ class Comment < ActiveRecord::Base
         updated_at: updated_at.to_date
       },
       relationships: { author: { data: { name: user.full_name,
-                                         email: user.email } } }
+                                         hashed_email: user.hashed_email } } }
     }
   end
 end

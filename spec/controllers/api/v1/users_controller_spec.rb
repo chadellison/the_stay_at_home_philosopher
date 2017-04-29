@@ -39,7 +39,8 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         end.to change { User.count }.by(1)
 
         expect(response.status).to eq 201
-        expect(JSON.parse(response.body)['attributes']['email']).to eq email
+        expect(JSON.parse(response.body)['attributes']['first_name']).to eq first_name
+        expect(JSON.parse(response.body)['attributes']['last_name']).to eq last_name
       end
     end
   end

@@ -83,4 +83,9 @@ RSpec.describe User, type: :model do
       expect(user.serialize_user[:relationships][:comments][:data]).to eq []
     end
   end
+
+  describe 'hashed_email' do
+    xit 'test' do
+    end
+  end
 end
