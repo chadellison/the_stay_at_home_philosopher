@@ -21,6 +21,7 @@ group :development, :test do
   gem 'launchy'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'selenium-webdriver'
   gem 'simplecov', require: false
 end
 
