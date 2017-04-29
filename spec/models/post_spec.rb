@@ -250,8 +250,16 @@ RSpec.describe Post, type: :model do
       end
     end
 
-    describe 'downcase_values' do
-      xit 'test' do
+    context 'before_save' do
+      describe 'downcase_values' do
+        it 'strips and downcases the title and body before they are saved' do
+          post = Post.create(title: 'This Title  ',
+                             body: "  Long Story",
+                             user_id: Faker::Number.number(4))
+
+          expect(post.title).to eq 'this title'
+          expect(post.body).to eq 'long story'
+        end
       end
     end
 
@@ -320,6 +328,7 @@ RSpec.describe Post, type: :model do
             expect(result.first[:relationships][:comments][:data]
               .second[:relationships][:author][:data][:name])
               .to eq 'Jones Bob'
+
             expect(result.last[:relationships][:comments][:data]
               .first[:relationships][:author][:data][:name])
               .to eq 'Foo Bar'

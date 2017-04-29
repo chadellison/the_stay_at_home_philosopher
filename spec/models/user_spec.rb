@@ -84,8 +84,16 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'hashed_email' do
-    xit 'test' do
+  context 'before_save' do
+    describe 'hashed_email' do
+      it "returns a hash of the user's email" do
+        user = User.create(first_name: Faker::Name.first_name,
+        last_name: Faker::Name.last_name,
+        email: Faker::Internet.email,
+        password: Faker::Internet.password)
+
+        expect(user.hashed_email).to eq Digest::MD5.hexdigest(user.email)
+      end
     end
   end
 end

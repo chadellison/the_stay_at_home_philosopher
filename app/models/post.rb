@@ -38,7 +38,7 @@ class Post < ActiveRecord::Base
   end
 
   def downcase_values
-    title.downcase!
-    body.downcase!
+    self.title = title.strip.downcase
+    self.body = body.strip.downcase
   end
 end

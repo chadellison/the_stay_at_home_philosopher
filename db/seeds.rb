@@ -1,25 +1,23 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
 User.create(first_name: 'jones', last_name: 'bob', email: 'jones@gmail.com', password: 'password')
 
-5.times do |n|
-  User.create(first_name: Faker::StarWars.character,
-              last_name: Faker::StarWars.character,
+15.times do |n|
+  names = [Faker::StarWars.character, Faker::Superhero.name]
+
+  User.create(first_name: names.sample.split.first,
+              last_name: names.sample.split.first,
               email: Faker::Internet.email,
               password: Faker::Internet.password,
               about_me: Faker::StarWars.quotes.sample)
 end
 
-30.times do |n|
-  post = Post.create(title: Faker::StarWars.quotes.sample,
-                     body: Faker::Lorem.paragraph(50),
+35.times do |n|
+  body = [Faker::Hipster.paragraph(50), Faker::Lorem.paragraph(50)]
+  titles = [Faker::StarWars.quotes.sample, Faker::Hipster.sentence(1)]
+
+  post = Post.create(title: titles.sample,
+                     body: body.sample,
                      user_id: User.all.sample.id)
-  if n % 3 == 0
+  if n.even?
     post.comments.create(user_id: User.all.sample.id, body: Faker::StarWars.quotes.sample)
   end
 end
