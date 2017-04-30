@@ -23,7 +23,7 @@ RSpec.feature 'user can login', js: true do
 
 
   scenario 'user sees button to add comment' do
-    visit 'https://the-stay-at-home-philosopher.herokuapp.com/'
+    visit('localhost:3000')
 
     find('.loginStatus').click
     within('.credentialForm') do
@@ -41,7 +41,8 @@ RSpec.feature 'user can login', js: true do
 
   context 'with invalid credentials' do
     scenario 'users sees error and is not logged in' do
-      visit 'https://the-stay-at-home-philosopher.herokuapp.com/'
+      visit('localhost:3000')
+      
       find('.loginStatus').click
       within('.credentialForm') do
         expect(page).to have_content('Email')
