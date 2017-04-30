@@ -6,6 +6,8 @@
 This is a Rails API that serves its corresponding front-end [ReactJs application](https://the-stay-at-home-philosopher.herokuapp.com/). Authentication is with devise; the client receives a token after logging in and uses that to interact with the API. Authentication is required to add posts and to add comments, but all users can read posts, read comments, and search on posts by keyword. Results are paginated with a page parameter```"page={page number}"```, and users can search on posts by keyword via search parameter```"search={keyword}"```. When a user is written to the database their Hashed email is also stored and sent to the client to fetch their
 Gravatar without exposing the user's email.
 
+The product in production can be viewed [here](https://the-stay-at-home-philosopher.herokuapp.com/)
+
 #### API
 The API returns data according the [JSON API spec](http://jsonapi.org/)
 Routes:
