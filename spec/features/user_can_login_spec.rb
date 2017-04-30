@@ -13,7 +13,7 @@ RSpec.feature 'user can login', js: true do
         click_button('Login')
       end
 
-      sleep 1
+      sleep 1 # this is to wait for the ajax to finish before checking the page
       expect(page).not_to have_content('login')
       expect(page).not_to have_content('Sign Up')
 
@@ -33,7 +33,7 @@ RSpec.feature 'user can login', js: true do
       click_button('Login')
     end
 
-    sleep 2
+    sleep 2 #this is to wait for the ajax to finish before checking the page
     first('.post').first('.postTitle').click
 
     expect(page).to have_button('Leave a Comment')

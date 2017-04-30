@@ -12,7 +12,7 @@ RSpec.feature 'user can add comment', js: true do
         click_button('Login')
       end
 
-      sleep 2
+      sleep 2 #this is to wait for the ajax to finish before checking the page
       first('.post').first('.postTitle').click
 
       click_button('Leave a Comment')
@@ -20,7 +20,8 @@ RSpec.feature 'user can add comment', js: true do
       click_button('Submit')
       expect(page).to have_content('Your comment has been added!')
       click_button("OK, Got it!")
-      sleep 1
+      sleep 1 #this is to wait for the ajax to finish before checking the page
+
       expect(page).to have_content(comment)
       expect(page).to have_content("Author: Jones Bob")
       find('.logout').click
