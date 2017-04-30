@@ -29,16 +29,28 @@ Routes:
 * Rails version
 4.2.8
 
-#### Test Suite
-The test suite can be run with ```rspec``` from the root directory
-
-Note about the capybara selenium specs:
-To use Chrome you’ll need to have ChromeDriver installed. With Homebrew, ChromeDriver can be installed with: ```brew install chromedriver.```
-Since this app is a backend rails api, the feature tests
-ping the corresponding react app [the-stay-home-philosopher-client](https://the-stay-at-home-philosopher.herokuapp.com)
-
 * Database creation
+
 To create database and seed data, run:
 * ```rake db:create```
 * ```rake db:migrate```
 * ```rake db:seed```
+
+### Test Suite
+
+For the capybara selenium specs you’ll need to have ChromeDriver installed.
+With Homebrew, ChromeDriver can be installed with: ```brew install chromedriver.```
+Ideally I would want my test suite running in the same environment as my application,
+but I wanted to use a React front-end and still meet the requirements of the code
+test by using capybara. Since this app is a backend rails api, the feature tests
+ping the corresponding react app. [the-stay-home-philosopher-client](https://the-stay-at-home-philosopher.herokuapp.com)
+
+#### Instructions for running the test
+1) Make sure that you have pulled down the [React app](https://github.com/chadellison/the-stay-at-home-philosopher-client)
+and have it running on "localhost: 3000" (this can be done with ```npm start``` from the app's root directory)
+
+2) Make sure that you have seeded the development environment of the rails app. ```rake db:reset```
+
+3) Run the rails API in development on port 3001 ```rails s -p 3001``` (In a development environment, this is where the React app will look.)
+
+4) run ```rspec``` from the root directory
