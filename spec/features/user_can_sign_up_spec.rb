@@ -16,7 +16,6 @@ RSpec.feature 'user can sign up', js: true do
     end
   end
 
-
   context 'with invalid credentials' do
     scenario 'user sees error message' do
       visit('localhost:3000')
