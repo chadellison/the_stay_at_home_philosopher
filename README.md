@@ -48,12 +48,12 @@ ping the corresponding react app. [the-stay-home-philosopher-client](https://git
 on (localhost3000).
 
 #### Instructions for running the test suite
-1) Make sure that you have pulled down the [React app](https://github.com/chadellison/the-stay-at-home-philosopher-client)
-and that you have it running on "localhost:3000" (this can be done with ```npm start``` from the app's root directory)
+1) Run the rails API in development on port 3001 ```rails s -p 3001``` (In a development environment, this is where the React app will look.)
 
-2) Make sure that you have seeded the development environment of the rails app. ```rake db:reset```
+2) Make sure that you reset and seed the development environment of the rails app. ```rake db:reset```
 
-3) Run the rails API in development on port 3001 ```rails s -p 3001``` (In a development environment, this is where the React app will look.)
+3) Make sure that you have pulled down the [React app](https://github.com/chadellison/the-stay-at-home-philosopher-client)
+and that you have it running on "localhost:3000" (this can be done with ```npm start``` from the react app's root directory)
 
 4) run ```rspec``` from the root directory of the rails app.
 

@@ -20,6 +20,7 @@ RSpec.feature 'user can add comment', js: true do
       click_button('Submit')
       expect(page).to have_content('Your comment has been added!')
       click_button("OK, Got it!")
+      sleep 1
       expect(page).to have_content(comment)
       expect(page).to have_content("Author: Jones Bob")
       find('.logout').click

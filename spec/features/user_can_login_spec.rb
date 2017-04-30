@@ -13,6 +13,7 @@ RSpec.feature 'user can login', js: true do
         click_button('Login')
       end
 
+      sleep 1
       expect(page).not_to have_content('login')
       expect(page).not_to have_content('Sign Up')
 
@@ -42,7 +43,7 @@ RSpec.feature 'user can login', js: true do
   context 'with invalid credentials' do
     scenario 'users sees error and is not logged in' do
       visit('localhost:3000')
-      
+
       find('.loginStatus').click
       within('.credentialForm') do
         expect(page).to have_content('Email')

@@ -1,4 +1,7 @@
-User.create(first_name: 'jones', last_name: 'bob', email: 'jones@gmail.com', password: 'password')
+User.create(first_name: 'jones',
+            last_name: 'bob', email:
+            'jones@gmail.com',
+            password: 'password')
 
 15.times do |n|
   names = [Faker::StarWars.character, Faker::Superhero.name]
